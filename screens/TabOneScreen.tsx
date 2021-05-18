@@ -1,15 +1,27 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Button } from "react-native";
 
 import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+import { Text, View } from "../components/Themed";
+import { Context as AuthContext } from "../contexts/AuthContext";
 
 export default function TabOneScreen() {
+  const { signOut } = React.useContext(AuthContext);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <View
+        style={styles.separator}
+        lightColor="#eee"
+        darkColor="rgba(255,255,255,0.1)"
+      />
       <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+      <Button
+        onPress={() => signOut()}
+        title="Sign Out"
+        accessibilityLabel="Sign Out"
+      />
     </View>
   );
 }

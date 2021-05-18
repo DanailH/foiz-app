@@ -11,17 +11,25 @@ export default {
   config: {
     screens: {
       Root: {
+        initialRouteName: 'TabOneScreen',
         screens: {
           TabOne: {
             screens: {
-              TabOneScreen: 'one',
+              TabOneScreen: 'TabOne',
             },
           },
           TabTwo: {
             screens: {
-              TabTwoScreen: 'two',
+              TabTwoScreen: 'TabTwo',
             },
           },
+        },
+      },
+      Auth: {
+        initialRouteName: 'SignInScreen',
+        screens: {
+          SignInScreen: 'SignIn',
+          SignUpScreen: 'SignUp',
         },
       },
       NotFound: '*',
