@@ -11,16 +11,21 @@ export default {
   config: {
     screens: {
       Root: {
-        initialRouteName: 'TabOneScreen',
+        initialRouteName: 'HomeScreen',
         screens: {
-          TabOne: {
+          Home: {
             screens: {
-              TabOneScreen: 'TabOne',
+              HomeScreen: 'Home',
             },
           },
-          TabTwo: {
+          Sell: {
             screens: {
-              TabTwoScreen: 'TabTwo',
+              SellScreen: 'Sell',
+            },
+          },
+          Profile: {
+            screens: {
+              ProfileScreen: 'Profile',
             },
           },
         },
