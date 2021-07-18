@@ -9,7 +9,7 @@ import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
 import { setNavigator } from './navigationRef';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import { RootStackParamList } from '../types';
+import { RootStackParamList } from '../models/navigationParams';
 import AuthStackNavigator from './AuthStackNavigator';
 import BottomTabNavigator from './BottomTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';

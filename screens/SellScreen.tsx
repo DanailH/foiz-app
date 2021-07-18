@@ -1,14 +1,24 @@
 import * as React from 'react';
-import { Button, Image, Platform, StyleSheet } from 'react-native';
+import {
+  Button,
+  Image,
+  Platform,
+  StyleSheet,
+  SafeAreaView,
+  TextInput,
+  FlatList
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid';
-import { Text, View } from '../components/Themed';
+import { Text } from '../components/Themed';
 import { uploadImage } from '../libs/utils';
 import useUserUid from '../hooks/useUserUid';
 import { getItemRef } from '../libs/itemsFirestore';
 import useUserData from '../hooks/useUserData';
 import { getUserRef } from '../libs/usersFirestore';
+import { Picker } from '@react-native-picker/picker';
+import { Item } from '../models/itemModel';
 
 export default function SellScreen() {
   const userUid = useUserUid();
@@ -16,6 +26,11 @@ export default function SellScreen() {
   const userData = useUserData();
   const [loading, setLoading] = React.useState(false);
   const [images, setImages] = React.useState<string[]>([]);
+  const [itemTitle, setItemTitle] = React.useState<string>('');
+  const [itemDescription, setItemDescription] = React.useState<string>('');
+  const [itemBrand, setItemBrand] = React.useState<string>('');
+  const [itemPrice, setItemPrice] = React.useState<string>('');
+  const [itemCondition, setItemCondition] = React.useState<string>('');
 
   React.useEffect(() => {
     (async () => {
@@ -40,7 +55,7 @@ export default function SellScreen() {
     }
   };
 
-  const handleUploadImages = async () => {
+  const handleUploadItem = async () => {
     try {
       setLoading(true);
       const uploadImagesPromiseArray: any = [];
@@ -48,10 +63,17 @@ export default function SellScreen() {
         uploadImagesPromiseArray.push(uploadImage(image));
       });
 
-      const uploadUrls = await Promise.all(uploadImagesPromiseArray);
-      getItemRef(itemUid).set({
+      const uploadUrls: string[] = await Promise.all(uploadImagesPromiseArray);
+      const item: Item = {
         images: uploadUrls,
-      });
+        title: itemTitle,
+        description: itemDescription,
+        brand: itemBrand,
+        condition: itemCondition,
+        price: itemPrice,
+      };
+
+      getItemRef(itemUid).set(item);
 
       if (userData) {
         getUserRef(userUid).update({
@@ -68,30 +90,87 @@ export default function SellScreen() {
     } finally {
       setLoading(false);
       setImages([]);
+      setItemTitle('');
+      setItemDescription('');
+      setItemBrand('');
+      setItemPrice('');
+      setItemCondition('');
     }
   };
 
-  const renderPickedImages = () => {
-    const mappedImages = images.map((image, index) => <Image key={index} source={{ uri: image }} style={{ width: 200, height: 200 }} />);
-    return (
-      !!images.length && (
-        <React.Fragment>
-          { mappedImages }
-          <Button title="Upload images" onPress={handleUploadImages} />
-        </React.Fragment>
-      )
-    );
-  };
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sell</Text>
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        ListHeaderComponent={
+          <Button title="Pick an image" onPress={handlePickImage} />
+        }
+        data={images}
+        renderItem={({ item }: any) => (
+          <Image
+            source={{ uri: item }}
+            style={{ width: 100, height: 100, margin: 3 }}
+          />
+        )}
+        numColumns={4}
+        keyExtractor={(item, index) => index.toString()}
+        ListFooterComponent={
+          <React.Fragment>
+            <TextInput
+              style={styles.input}
+              onChangeText={setItemTitle}
+              placeholder="Title"
+              value={itemTitle}
+            />
 
-      {loading && <Text style={styles.title}>LOADING...</Text>}
+            <TextInput
+              style={{
+                ...styles.input,
+                height: 200,
+              }}
+              onChangeText={setItemDescription}
+              placeholder="Description"
+              value={itemDescription}
+              multiline
+              textAlignVertical="top"
+            />
 
-      <Button title="Pick an image" onPress={handlePickImage} />
-      { renderPickedImages() }
-    </View>
+            <TextInput
+              style={styles.input}
+              onChangeText={setItemBrand}
+              placeholder="Brand"
+              value={itemBrand}
+            />
+
+            <Text>Condition</Text>
+            <Picker
+              selectedValue={itemCondition}
+              onValueChange={(value) => setItemCondition(value)}
+            >
+              <Picker.Item label="New with tags" value="new with tags" />
+              <Picker.Item label="New without tags" value="new without tags" />
+              <Picker.Item label="Very good" value="very good" />
+              <Picker.Item label="Good" value="good" />
+              <Picker.Item label="Satisfactory" value="satisfactory" />
+            </Picker>
+
+            <TextInput
+              style={styles.input}
+              onChangeText={setItemPrice}
+              placeholder="Price"
+              value={itemPrice}
+              keyboardType="numeric"
+            />
+
+            {loading && <Text style={styles.title}>LOADING...</Text>}
+            <Button
+              disabled={!images.length}
+              title="Upload item"
+              onPress={handleUploadItem}
+            />
+          </React.Fragment>
+        }
+      />
+    </SafeAreaView>
   );
 }
 
@@ -102,5 +181,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  input: {
+    marginBottom: 20,
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
   },
 });

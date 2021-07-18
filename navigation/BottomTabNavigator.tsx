@@ -13,7 +13,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import HomeScreen from '../screens/HomeScreen';
 import SellScreen from '../screens/SellScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import { BottomTabParamList, HomeParamList, SellParamList, ProfileParamList } from '../types';
+import { BottomTabParamList, HomeParamList, SellParamList, ProfileParamList } from '../models/navigationParams';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
