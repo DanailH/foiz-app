@@ -71,6 +71,7 @@ export default function SellScreen() {
         brand: itemBrand,
         condition: itemCondition,
         price: itemPrice,
+        user: userUid!,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       };
 

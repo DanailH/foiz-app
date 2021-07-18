@@ -5,5 +5,6 @@ export interface Item {
   brand: string;
   condition: string;
   price: string;
+  user: string;
   timestamp: any;
 };
