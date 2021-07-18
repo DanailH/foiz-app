@@ -6,7 +6,7 @@ export default function useUserData() {
   const [allItems, setAllItems] = React.useState<any>(null);
 
   const getAllItems = async () => {
-    const itemsSnapshot = await getItemsCollectionRef().get();
+    const itemsSnapshot = await getItemsCollectionRef().orderBy('timestamp', 'desc').get();
     return itemsSnapshot.docs.map(doc => doc.data());
   };
 

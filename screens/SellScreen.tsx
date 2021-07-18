@@ -19,6 +19,7 @@ import useUserData from '../hooks/useUserData';
 import { getUserRef } from '../libs/usersFirestore';
 import { Picker } from '@react-native-picker/picker';
 import { Item } from '../models/itemModel';
+import firebase from '../libs/firebase';
 
 export default function SellScreen() {
   const userUid = useUserUid();
@@ -31,7 +32,6 @@ export default function SellScreen() {
   const [itemBrand, setItemBrand] = React.useState<string>('');
   const [itemPrice, setItemPrice] = React.useState<string>('');
   const [itemCondition, setItemCondition] = React.useState<string>('');
-
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -71,6 +71,7 @@ export default function SellScreen() {
         brand: itemBrand,
         condition: itemCondition,
         price: itemPrice,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       };
 
       getItemRef(itemUid).set(item);
