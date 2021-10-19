@@ -1,52 +1,88 @@
-import React from 'react';
-import { View, StyleSheet, Text, TextInput, Button } from 'react-native';
-import { Context as AuthContext } from '../contexts/AuthContext';
-import { navigate } from '../navigation/navigationRef';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import {
+  Input,
+  Button,
+  Heading,
+  Text,
+  Center,
+  Divider,
+  Stack,
+  Icon,
+} from "native-base";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Context as AuthContext } from "../contexts/AuthContext";
+import { navigate } from "../navigation/navigationRef";
 
 const SignInScreen = () => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const { signIn } = React.useContext(AuthContext);
 
   const handleEmailOnChange = (value: string) => setEmail(value);
   const handlePasswordOnChange = (value: string) => setPassword(value);
-  const handleSignInOnPress = () => signIn({email, password});
-  const handleNavigateOnPress = () => navigate('SignUp');
+  const handleSignInOnPress = () => signIn({ email, password });
+  const handleNavigateOnPress = () => navigate("SignUp");
 
   return (
     <View style={styles.container}>
-      <Text>Sign In</Text>
+      <Center>
+        <Stack space={4}>
+          <Heading size="lg">Welcome to Foiz</Heading>
+          <Text fontSize="sm">
+            Your place to sell and find prevoled clothes, shoes and accessories
+          </Text>
+        </Stack>
+      </Center>
+      <Divider my="8" />
+      <Stack space={6} style={styles.box}>
+        <Heading size="md">I already have an account</Heading>
+        <Input
+          style={styles.input}
+          placeholder="Email"
+          size="lg"
+          onChangeText={handleEmailOnChange}
+          value={email}
+        />
+        <Input
+          style={styles.input}
+          placeholder="Password"
+          size="lg"
+          onChangeText={handlePasswordOnChange}
+          value={password}
+          secureTextEntry={true}
+          InputRightElement={
+            <Icon
+              as={<MaterialIcons name="visibility-off" />}
+              size={5}
+              mr="2"
+              color="muted.400"
+            />
+          }
+        />
 
-      <TextInput
-        style={styles.input}
-        onChangeText={handleEmailOnChange}
-        value={email}
-        placeholder="Email"
-        autoCompleteType="off"
-        autoCapitalize="none"
-      />
+        <Button onPress={handleSignInOnPress} accessibilityLabel="Login">
+          Login
+        </Button>
+      </Stack>
+      <Divider my="8" />
 
-      <TextInput
-        style={styles.input}
-        onChangeText={handlePasswordOnChange}
-        value={password}
-        placeholder="Password"
-        autoCompleteType="off"
-        autoCapitalize="none"
-        secureTextEntry={true}
-      />
-
-      <Button
-        onPress={handleSignInOnPress}
-        title="Sign In"
-        accessibilityLabel="Sign In"
-      />
-
-      <Button
-        onPress={handleNavigateOnPress}
-        title="Sign Up"
-        accessibilityLabel="Sign Up"
-      />
+      <Stack space={6}>
+        <Heading size="md">Are you new to Foiz?</Heading>
+        <Text fontSize="sm">
+          Register for free to become a member and start selling/buying preloved
+          fashion items. With the information you enter below you can log in to
+          our app.
+        </Text>
+        <Button
+          onPress={handleNavigateOnPress}
+          accessibilityLabel="Sign Up"
+          variant="outline"
+          style={styles.button}
+        >
+          Sign Up
+        </Button>
+      </Stack>
     </View>
   );
 };
@@ -57,11 +93,20 @@ SignInScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#FFF",
+    height: "100%",
+    padding: 20,
+  },
+  box: {
+    backgroundColor: "#fcf9f9",
+    padding: 20,
+    borderRadius: 10,
   },
   input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
+    backgroundColor: "#FFF",
+  },
+  button: {
+    borderColor: "black",
   },
 });
 
