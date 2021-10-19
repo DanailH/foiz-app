@@ -35,7 +35,7 @@ const SignInScreen = () => {
         </Stack>
       </Center>
       <Divider my="8" />
-      <Stack space={6} style={styles.box}>
+      <Stack space={6} mx="4">
         <Heading size="md">I already have an account</Heading>
         <Input
           style={styles.input}
@@ -43,6 +43,14 @@ const SignInScreen = () => {
           size="lg"
           onChangeText={handleEmailOnChange}
           value={email}
+          InputLeftElement={
+            <Icon
+              as={<MaterialIcons name="email" />}
+              size={5}
+              ml="2"
+              color="muted.400"
+            />
+          }
         />
         <Input
           style={styles.input}
@@ -51,6 +59,14 @@ const SignInScreen = () => {
           onChangeText={handlePasswordOnChange}
           value={password}
           secureTextEntry={true}
+          InputLeftElement={
+            <Icon
+              as={<MaterialIcons name="lock" />}
+              size={5}
+              ml="2"
+              color="muted.400"
+            />
+          }
           InputRightElement={
             <Icon
               as={<MaterialIcons name="visibility-off" />}
@@ -67,7 +83,7 @@ const SignInScreen = () => {
       </Stack>
       <Divider my="8" />
 
-      <Stack space={6}>
+      <Stack space={6} style={styles.loginContainer}>
         <Heading size="md">Are you new to Foiz?</Heading>
         <Text fontSize="sm">
           Register for free to become a member and start selling/buying preloved
@@ -95,12 +111,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FFF",
     height: "100%",
-    padding: 20,
   },
-  box: {
+  loginContainer: {
     backgroundColor: "#fcf9f9",
     padding: 20,
-    borderRadius: 10,
   },
   input: {
     backgroundColor: "#FFF",

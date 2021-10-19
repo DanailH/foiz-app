@@ -51,5 +51,8 @@ export const theme = extendTheme({
 				}
 			},
 		},
+		Heading: {
+			backgroundColor: 'black'
+		}
 	},
 });
