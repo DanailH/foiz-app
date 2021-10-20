@@ -30,7 +30,7 @@ const SignInScreen = () => {
         <Stack space={4}>
           <Heading size="lg">Welcome to Foiz</Heading>
           <Text fontSize="sm">
-            Your place to sell and find prevoled clothes, shoes and accessories
+            Your place to sell and find preloved clothes, shoes and accessories
           </Text>
         </Stack>
       </Center>
@@ -76,6 +76,9 @@ const SignInScreen = () => {
             />
           }
         />
+        <Text fontSize="xs">
+          Forgot password
+        </Text>
 
         <Button onPress={handleSignInOnPress} accessibilityLabel="Login">
           Login
@@ -113,14 +116,11 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   loginContainer: {
-    backgroundColor: "#fcf9f9",
+    backgroundColor: "#faf7f3",
     padding: 20,
   },
   input: {
     backgroundColor: "#FFF",
-  },
-  button: {
-    borderColor: "black",
   },
 });
 

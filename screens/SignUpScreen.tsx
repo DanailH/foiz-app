@@ -109,11 +109,10 @@ SignUpScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFF",
     height: "100%",
+    backgroundColor: "#faf7f3",
   },
   box: {
-    backgroundColor: "#fcf9f9",
     padding: 20,
   },
   input: {
