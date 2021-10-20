@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import createContext from './CreateContext';
 import { auth } from '../libs/firebase';
+import { getUserRef } from '../libs/usersFirestore';
 
 const authReducer = (state: any, action: any) => {
   switch (action.type) {
@@ -10,7 +11,7 @@ const authReducer = (state: any, action: any) => {
       return { errorMessage: '', token: action.payload };
     case 'clear_error_message':
       return { ...state, errorMessage: '' };
-    case 'signout':
+    case 'logout':
       return { token: null, errorMessage: '' };
     default:
       return state;
@@ -34,7 +35,8 @@ const clearErrorMessage = (dispatch: any) => () => {
 const signUp = (dispatch: any) => async ({ email, password }: any) => {
   try {
     await auth.createUserWithEmailAndPassword(email, password);
-    const token = await auth.currentUser!.getIdToken();
+    const token = await auth.currentUser!.getIdToken();        
+    getUserRef(auth.currentUser!.uid).set({ email });
     await AsyncStorage.setItem('token', token);
     dispatch({ type: 'signin', payload: token });
   } catch (error) {
@@ -59,13 +61,13 @@ const signIn = (dispatch: any) => async ({ email, password }: any) => {
   }
 };
 
-const signOut = (dispatch: any) => async () => {
+const logOut = (dispatch: any) => async () => {
   await AsyncStorage.removeItem('token');
-  dispatch({ type: 'signout' });
+  dispatch({ type: 'logout' });
 };
 
 export const { Provider, Context } = createContext(
   authReducer,
-  { signIn, signOut, signUp, clearErrorMessage, tryLocalSignin },
+  { signIn, logOut, signUp, clearErrorMessage, tryLocalSignin },
   { token: null, errorMessage: '' }
 );

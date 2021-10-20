@@ -97,7 +97,6 @@ const SignInScreen = () => {
           onPress={handleNavigateOnPress}
           accessibilityLabel="Sign Up"
           variant="outline"
-          style={styles.button}
         >
           Sign Up
         </Button>
