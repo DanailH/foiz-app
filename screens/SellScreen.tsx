@@ -1,17 +1,25 @@
 import * as React from 'react';
 import {
-  Button,
-  Image,
   Platform,
   StyleSheet,
   SafeAreaView,
-  TextInput,
   FlatList
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import 'react-native-get-random-values';
 import { v4 as uuid } from 'uuid';
-import { Text } from '../components/Themed';
+import {
+  Button,
+  Image,
+  TextArea,
+  Input,
+  Text,
+  Stack,
+  Icon,
+  Box,
+  ScrollView
+} from 'native-base';
+import { EvilIcons } from '@expo/vector-icons';
 import { uploadImage } from '../libs/utils';
 import useUserUid from '../hooks/useUserUid';
 import { getItemRef } from '../libs/itemsFirestore';
@@ -20,18 +28,20 @@ import { getUserRef } from '../libs/usersFirestore';
 import { Picker } from '@react-native-picker/picker';
 import { Item } from '../models/itemModel';
 import firebase from '../libs/firebase';
+import Loader from '../components/Loader';
 
 export default function SellScreen() {
   const userUid = useUserUid();
+  const [loading, setLoading] = React.useState(false);
   const itemUid = uuid();
   const userData = useUserData();
-  const [loading, setLoading] = React.useState(false);
   const [images, setImages] = React.useState<string[]>([]);
   const [itemTitle, setItemTitle] = React.useState<string>('');
   const [itemDescription, setItemDescription] = React.useState<string>('');
   const [itemBrand, setItemBrand] = React.useState<string>('');
   const [itemPrice, setItemPrice] = React.useState<string>('');
   const [itemCondition, setItemCondition] = React.useState<string>('');
+  
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -76,19 +86,13 @@ export default function SellScreen() {
       };
 
       getItemRef(itemUid).set(item);
-
-      if (userData) {
-        getUserRef(userUid).update({
-          items: [...userData.items, itemUid],
-        });
-      } else {
-        getUserRef(userUid).set({
-          items: [itemUid],
-        });
-      }
+      getUserRef(userUid).update({
+        ...userData,
+        items: [...userData.items, itemUid],
+      });
     } catch (e) {
       console.log(e);
-      alert('Upload failed, sorry :(');
+      alert('Something went wrong. Please try again');
     } finally {
       setLoading(false);
       setImages([]);
@@ -101,93 +105,112 @@ export default function SellScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        ListHeaderComponent={
-          <Button title="Pick an image" onPress={handlePickImage} />
-        }
-        data={images}
-        renderItem={({ item }: any) => (
-          <Image
-            source={{ uri: item }}
-            style={{ width: 100, height: 100, margin: 3 }}
-          />
-        )}
-        numColumns={4}
-        keyExtractor={(item, index) => index.toString()}
-        ListFooterComponent={
-          <React.Fragment>
-            <TextInput
-              style={styles.input}
-              onChangeText={setItemTitle}
-              placeholder="Title"
-              value={itemTitle}
-            />
+    <React.Fragment>
+      <Loader isLoading={loading} />    
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          <Stack space={4}>
+            <FlatList
+              data={images}
+              numColumns={4}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }: any) => (
+                <Box p={2}>
 
-            <TextInput
-              style={{
-                ...styles.input,
-                height: 200,
-              }}
-              onChangeText={setItemDescription}
-              placeholder="Description"
-              value={itemDescription}
-              multiline
-              textAlignVertical="top"
-            />
+                  <Image
+                    source={{ uri: item }}
+                    size='md'
+                    alt='item-image'
+                    />
+                </Box>
+              )}
+              ListFooterComponent={
+                <React.Fragment>
+                  <Box style={styles.selectBtn} paddingTop={!images.length ? '4' : '2'}>
+                    <Button onPress={handlePickImage} variant="outline" w="50%"
+                      leftIcon={<Icon as={EvilIcons} name="plus" />}
+                      >
+                      {!images.length ? 'Select images' : 'Change images'}
+                    </Button>
+                  </Box>
+                  <Box style={styles.box}>
+                    <Text fontSize="md">
+                      Title
+                    </Text>
+                    <Input size="md" placeholder="e.g. Red Zara blazer" variant="underlined" value={itemTitle} onChangeText={setItemTitle} />
 
-            <TextInput
-              style={styles.input}
-              onChangeText={setItemBrand}
-              placeholder="Brand"
-              value={itemBrand}
-            />
+                    <Text fontSize="md" my={4} paddingTop={2}>
+                      Describe your item
+                    </Text>
+                    <TextArea
+                      h={20}
+                      fontSize="sm"
+                      onChangeText={setItemDescription}
+                      value={itemDescription}
+                      placeholder="e.g. It's worn a few times, true to size"
+                      />
+                  </Box>
+                  <Box style={styles.box}>
+                    <Text fontSize="md">
+                      Brand
+                    </Text>
+                    <Input size="md" placeholder="Add the brand of the item" value={itemBrand} onChangeText={setItemBrand} variant="underlined" />
 
-            <Text>Condition</Text>
-            <Picker
-              selectedValue={itemCondition}
-              onValueChange={(value) => setItemCondition(value)}
-            >
-              <Picker.Item label="New with tags" value="new with tags" />
-              <Picker.Item label="New without tags" value="new without tags" />
-              <Picker.Item label="Very good" value="very good" />
-              <Picker.Item label="Good" value="good" />
-              <Picker.Item label="Satisfactory" value="satisfactory" />
-            </Picker>
+                    <Text fontSize="md" paddingTop={6}>
+                      Select condition
+                    </Text>
+                    <Picker
+                      selectedValue={itemCondition}
+                      onValueChange={(value) => setItemCondition(value)}
+                      >
+                      <Picker.Item label="New with tags" value="new with tags" />
+                      <Picker.Item label="New without tags" value="new without tags" />
+                      <Picker.Item label="Very good" value="very good" />
+                      <Picker.Item label="Good" value="good" />
+                      <Picker.Item label="Satisfactory" value="satisfactory" />
+                    </Picker>
 
-            <TextInput
-              style={styles.input}
-              onChangeText={setItemPrice}
-              placeholder="Price"
-              value={itemPrice}
-              keyboardType="numeric"
-            />
-
-            {loading && <Text style={styles.title}>LOADING...</Text>}
-            <Button
-              disabled={!images.length}
-              title="Upload item"
-              onPress={handleUploadItem}
-            />
-          </React.Fragment>
-        }
-      />
-    </SafeAreaView>
+                    <Text fontSize="md">
+                      Price
+                    </Text>
+                    <Input size="md" placeholder="0.00" value={itemPrice} onChangeText={setItemPrice} keyboardType="numeric" type="number" variant="underlined" />
+                  </Box>
+                  <Button
+                    disabled={!images.length}
+                    onPress={handleUploadItem}
+                    mx={4}
+                    marginBottom={10}
+                    marginTop={4}
+                    >
+                    Upload item
+                  </Button>
+                </React.Fragment>
+              }
+              />
+          </Stack>
+        </ScrollView>
+      </SafeAreaView>
+    </React.Fragment>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#faf7f3',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
   },
-  input: {
+  selectBtn: {
+    alignItems: 'center',
+    display: 'flex',
     marginBottom: 20,
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
+  },
+  box: {
+    marginBottom: 20,
+    padding: 20,
+    backgroundColor: '#FFF',
   },
 });

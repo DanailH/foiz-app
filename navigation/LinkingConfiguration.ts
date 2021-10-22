@@ -20,7 +20,7 @@ export default {
           },
           Sell: {
             screens: {
-              SellScreen: 'Sell',
+              SellScreen: 'Sell an item',
             },
           },
           Profile: {

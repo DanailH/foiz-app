@@ -48,14 +48,14 @@ function RootNavigator() {
       screenOptions={{ headerShown: false }}
     >
       {state.token ? (
-        <>
+        <React.Fragment>
           <Stack.Screen name="Root" component={BottomTabNavigator} />
           <Stack.Screen
             name="NotFound"
             component={NotFoundScreen}
             options={{ title: "Oops!" }}
           />
-        </>
+        </React.Fragment>
       ) : (
         <Stack.Screen name="Auth" component={AuthStackNavigator} />
       )}
