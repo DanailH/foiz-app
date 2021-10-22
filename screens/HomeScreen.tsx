@@ -1,35 +1,68 @@
 import * as React from 'react';
-import { FlatList, SafeAreaView, StyleSheet, Image, Button } from "react-native";
-import { Text, View } from '../components/Themed';
+import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
+import {
+  Input,
+  Heading,
+  Text,
+  Box,
+  Flex,
+  Icon,
+  Button
+} from 'native-base';
+import { Ionicons } from '@expo/vector-icons';
 import useAllItems from '../hooks/useAllItems';
+import ItemBox from '../components/ItemBox';
 
 export default function HomeScreen() {
+
   const { allItems, refreshItems } = useAllItems();
+  console.log(allItems)
+
+  const SearchBar = () => (
+    <Input
+      placeholder="Search for items"
+      variant="filled"
+      bg="gray.100"
+      borderRadius="10"
+      py="2"
+      m='4'
+      fontSize="14"
+      placeholderTextColor="gray.600"
+      _hover={{ bg: 'gray.200', borderWidth: 0 }}
+      borderWidth="0"
+      InputLeftElement={
+        <Icon
+          ml="2"
+          size="5"
+          color="gray.500"
+          as={<Ionicons name="ios-search" />}
+        />
+      }
+    />
+  );
+
 
   return (
     <SafeAreaView style={styles.container}>
+      <SearchBar />
+      <Box m='4' >
+        <Heading size="md">Shop by category</Heading>
+        <Text fontSize="sm">
+          Your place to sell and find preloved clothes, shoes and accessories
+        </Text>
+      </Box>
       <FlatList
         ListHeaderComponent={
-          <Button title="Refresh" onPress={refreshItems} />
+          <Flex
+            direction="row" style={styles.boxContainer}>
+            <Heading size="md" p='4'>Newsfeed</Heading>
+            <Button variant="ghost" onPress={refreshItems} _text={{
+              fontSize: 'sm'
+            }}>Refresh feed</Button>
+          </Flex>
         }
         data={allItems}
-        renderItem={({ item }: any) => (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              margin: 10,
-            }}
-          >
-            <Image
-              style={styles.imageThumbnail}
-              source={{ uri: item.images[0] }}
-            />
-            <Text>{item.title}</Text>
-            <Text>{item.brand}</Text>
-            <Text>{item.price}</Text>
-          </View>
-        )}
+        renderItem={({ item }: any) => <ItemBox item={item}/>}
         numColumns={2}
         keyExtractor={(item, index) => index.toString()}
       />
@@ -40,14 +73,15 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFF',
+    padding: 20
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
   },
-  imageThumbnail: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 250,
+  boxContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
 });

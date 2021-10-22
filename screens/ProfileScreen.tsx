@@ -7,8 +7,8 @@ import {
   Input,
   Icon,
   Box
-} from "native-base";
-import { MaterialIcons } from "@expo/vector-icons";
+} from 'native-base';
+import { MaterialIcons } from '@expo/vector-icons';
 import { View } from '../components/Themed';
 import { Context as AuthContext } from '../contexts/AuthContext';
 import useUserData from '../hooks/useUserData';
@@ -31,11 +31,8 @@ export default function ProfileScreen() {
       </Text>
       <Box style={styles.boxContainer} p='4'>
       <Input
-        // style={styles.input}
         placeholder="Email"
         size="lg"
-        // onChangeText={handleEmailOnChange}
-        // value={email}
         InputLeftElement={
           <Icon
             as={<MaterialIcons name="email" />}
@@ -46,11 +43,8 @@ export default function ProfileScreen() {
         }
       />
       <Input
-        // style={styles.input}
         placeholder="Country"
         size="lg"
-        // onChangeText={handleEmailOnChange}
-        // value={email}
         marginTop ='4'
         InputLeftElement={
           <Icon
@@ -76,14 +70,13 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#faf7f3",
-    // padding: 20
+    backgroundColor: '#faf7f3',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
   },
   boxContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   }
 });

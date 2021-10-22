@@ -18,7 +18,7 @@ import {
   Icon,
   Box,
   ScrollView
-} from "native-base";
+} from 'native-base';
 import { EvilIcons } from '@expo/vector-icons';
 import { uploadImage } from '../libs/utils';
 import useUserUid from '../hooks/useUserUid';
@@ -86,13 +86,10 @@ export default function SellScreen() {
       };
 
       getItemRef(itemUid).set(item);
-
-      if (userData && userData.items) {
-        getUserRef(userUid).update({
-          ...userData,
-          items: [...userData.items, itemUid],
-        });
-      } 
+      getUserRef(userUid).update({
+        ...userData,
+        items: [...userData.items, itemUid],
+      });
     } catch (e) {
       console.log(e);
       alert('Something went wrong. Please try again');
@@ -107,9 +104,9 @@ export default function SellScreen() {
     }
   };
 
-  return (<>
-    {loading ? <Loader />
-      :
+  return (
+    <React.Fragment>
+      <Loader isLoading={loading} />    
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <Stack space={4}>
@@ -124,15 +121,15 @@ export default function SellScreen() {
                     source={{ uri: item }}
                     size='md'
                     alt='item-image'
-                  />
+                    />
                 </Box>
               )}
               ListFooterComponent={
-                <>
+                <React.Fragment>
                   <Box style={styles.selectBtn} paddingTop={!images.length ? '4' : '2'}>
                     <Button onPress={handlePickImage} variant="outline" w="50%"
                       leftIcon={<Icon as={EvilIcons} name="plus" />}
-                    >
+                      >
                       {!images.length ? 'Select images' : 'Change images'}
                     </Button>
                   </Box>
@@ -151,7 +148,7 @@ export default function SellScreen() {
                       onChangeText={setItemDescription}
                       value={itemDescription}
                       placeholder="e.g. It's worn a few times, true to size"
-                    />
+                      />
                   </Box>
                   <Box style={styles.box}>
                     <Text fontSize="md">
@@ -165,7 +162,7 @@ export default function SellScreen() {
                     <Picker
                       selectedValue={itemCondition}
                       onValueChange={(value) => setItemCondition(value)}
-                    >
+                      >
                       <Picker.Item label="New with tags" value="new with tags" />
                       <Picker.Item label="New without tags" value="new without tags" />
                       <Picker.Item label="Very good" value="very good" />
@@ -184,24 +181,23 @@ export default function SellScreen() {
                     mx={4}
                     marginBottom={10}
                     marginTop={4}
-                  >
+                    >
                     Upload item
                   </Button>
-                </>
+                </React.Fragment>
               }
-            />
+              />
           </Stack>
         </ScrollView>
       </SafeAreaView>
-    }
-  </>
+    </React.Fragment>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#faf7f3",
+    backgroundColor: '#faf7f3',
   },
   title: {
     fontSize: 20,
