@@ -3,17 +3,16 @@
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
 
-import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-
+import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import HomeScreen from '../screens/HomeScreen';
 import SellScreen from '../screens/SellScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import { BottomTabParamList, HomeParamList, SellParamList, ProfileParamList } from '../models/navigationParams';
+import { BottomTabParamList, HomeParamList, SellParamList } from '../models/navigationParams';
+import { ProfileNavigator } from './ProfileNavigator';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -79,22 +78,8 @@ function SellNavigator() {
       <SellStack.Screen
         name="SellScreen"
         component={SellScreen}
-        options={{ headerTitle: 'Sell' }}
+        options={{ headerTitle: 'Sell item' }}
       />
     </SellStack.Navigator>
-  );
-}
-
-const ProfileStack = createStackNavigator<ProfileParamList>();
-
-function ProfileNavigator() {
-  return (
-    <ProfileStack.Navigator>
-      <ProfileStack.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
-        options={{ headerTitle: 'Profile' }}
-      />
-    </ProfileStack.Navigator>
   );
 }
