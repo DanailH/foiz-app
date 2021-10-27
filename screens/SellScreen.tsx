@@ -41,7 +41,7 @@ export default function SellScreen() {
   const [itemBrand, setItemBrand] = React.useState<string>('');
   const [itemPrice, setItemPrice] = React.useState<string>('');
   const [itemCondition, setItemCondition] = React.useState<string>('');
-  
+
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -86,10 +86,18 @@ export default function SellScreen() {
       };
 
       getItemRef(itemUid).set(item);
-      getUserRef(userUid).update({
-        ...userData,
-        items: [...userData.items, itemUid],
-      });
+
+      if (userData && userData.items) {
+        getUserRef(userUid).update({
+          ...userData,
+          items: [...userData.items, itemUid],
+        });
+      } else {
+        getUserRef(userUid).set({
+          ...userData,
+          items: [itemUid],
+        });
+      }
     } catch (e) {
       console.log(e);
       alert('Something went wrong. Please try again');
@@ -106,7 +114,7 @@ export default function SellScreen() {
 
   return (
     <React.Fragment>
-      <Loader isLoading={loading} />    
+      <Loader isLoading={loading} />
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <Stack space={4}>
@@ -116,12 +124,11 @@ export default function SellScreen() {
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }: any) => (
                 <Box p={2}>
-
                   <Image
                     source={{ uri: item }}
                     size='md'
                     alt='item-image'
-                    />
+                  />
                 </Box>
               )}
               ListFooterComponent={
@@ -197,20 +204,20 @@ export default function SellScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#faf7f3',
+    backgroundColor: "#faf7f3",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   selectBtn: {
-    alignItems: 'center',
-    display: 'flex',
+    alignItems: "center",
+    display: "flex",
     marginBottom: 20,
   },
   box: {
     marginBottom: 20,
     padding: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
   },
 });

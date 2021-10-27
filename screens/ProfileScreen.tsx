@@ -22,8 +22,6 @@ export default function ProfileScreen() {
   const userData = useUserData();
   const userItems = useUserItems();
   const userAccount = userData && userData.userAccount
-
-  console.log(userItems, 'userItems')
   const { logOut } = React.useContext(AuthContext);
 
   const renderAvatarHeader = () => {

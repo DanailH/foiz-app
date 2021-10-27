@@ -13,34 +13,31 @@ import { Ionicons } from '@expo/vector-icons';
 import useAllItems from '../hooks/useAllItems';
 import ItemBox from '../components/ItemBox';
 
+const SearchBar = () => (
+  <Input
+    placeholder="Search for items"
+    variant="filled"
+    bg="gray.100"
+    borderRadius="10"
+    py="2"
+    m="4"
+    fontSize="14"
+    placeholderTextColor="gray.600"
+    _hover={{ bg: "gray.200", borderWidth: 0 }}
+    borderWidth="0"
+    InputLeftElement={
+      <Icon
+        ml="2"
+        size="5"
+        color="gray.500"
+        as={<Ionicons name="ios-search" />}
+      />
+    }
+  />
+);
+
 export default function HomeScreen() {
-
   const { allItems, refreshItems } = useAllItems();
-  console.log(allItems)
-
-  const SearchBar = () => (
-    <Input
-      placeholder="Search for items"
-      variant="filled"
-      bg="gray.100"
-      borderRadius="10"
-      py="2"
-      m='4'
-      fontSize="14"
-      placeholderTextColor="gray.600"
-      _hover={{ bg: 'gray.200', borderWidth: 0 }}
-      borderWidth="0"
-      InputLeftElement={
-        <Icon
-          ml="2"
-          size="5"
-          color="gray.500"
-          as={<Ionicons name="ios-search" />}
-        />
-      }
-    />
-  );
-
 
   return (
     <SafeAreaView style={styles.container}>
