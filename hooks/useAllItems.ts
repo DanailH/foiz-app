@@ -5,6 +5,10 @@ import { getItemsCollectionRef } from '../libs/itemsFirestore';
 export default function useUserData() {
   const [allItems, setAllItems] = React.useState<any>(null);
 
+  React.useEffect(() => {
+    refreshItems();
+  }, [firestore]);
+
   const getAllItems = async () => {
     const itemsSnapshot = await getItemsCollectionRef().orderBy('timestamp', 'desc').get();
     return itemsSnapshot.docs.map(doc => doc.data());
@@ -14,10 +18,6 @@ export default function useUserData() {
     const items = await getAllItems();
     setAllItems(items);
   };
-
-  React.useEffect(() => {
-    refreshItems();
-  }, [firestore]);
 
   return {
     allItems,

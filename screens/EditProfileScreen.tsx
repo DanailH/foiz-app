@@ -37,7 +37,7 @@ export const StyledText = (props: any) => {
 
 const EditProfileScreen = ({ navigation }: any) => {
   const userUid = useUserUid();
-  const userData = useUserData();
+  const { userData } = useUserData();
   const [avatar, setAvatar] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [userDescription, setUserDescription] = React.useState('');
@@ -81,7 +81,10 @@ const EditProfileScreen = ({ navigation }: any) => {
   const handleEditProfile = async () => {
     try {
       setLoading(true);
-      const uploadedAvatarUrl = await uploadImage(avatar);
+      let uploadedAvatarUrl = avatar;
+      if (avatar) {
+        uploadedAvatarUrl = await uploadImage(avatar);
+      }
 
       if (userData.userAccount) {
         await getUserRef(userUid).update({
@@ -106,8 +109,10 @@ const EditProfileScreen = ({ navigation }: any) => {
         });
       }
 
-      let oldAvatarRef = storage.refFromURL(userData.userAccount.avatar);
-      await oldAvatarRef.delete();
+      if (userData.userAccount.avatar) {
+        let oldAvatarRef = storage.refFromURL(userData.userAccount.avatar);
+        await oldAvatarRef.delete();
+      }
 
       const popAction = StackActions.pop(1);
       navigation.dispatch(popAction);

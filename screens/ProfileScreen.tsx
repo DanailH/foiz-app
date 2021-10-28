@@ -17,22 +17,21 @@ import useUserData from '../hooks/useUserData';
 import useUserItems from '../hooks/useUserItems';
 import ProfileSheet from '../components/ProfileSheet';
 import ItemBox from '../components/ItemBox';
+import { useIsFocused } from '@react-navigation/native';
+import { roundArrayItems } from '../libs/utils';
 
 export default function ProfileScreen() {
-  const userData = useUserData();
-  const userItems = useUserItems();
-  const userAccount = userData && userData.userAccount
+  const isFocused = useIsFocused();
+  const { userData, refreshUserData } = useUserData();
+  const { userItems, refreshUserItems } = useUserItems();
   const { logOut } = React.useContext(AuthContext);
-console.log(userItems)
+
   React.useEffect(() => {
-    const userAccount = userData?.userAccount;
-    // if (userAccount) {
-    //   setUserDescription(userAccount.aboutMe);
-    //   setGender(userAccount.gender);
-    //   setAvatar(userAccount.avatar);
-    // }
-    // setEmail(userData?.email);
-  }, [userData, userItems]);
+    if (isFocused) {
+      refreshUserData();
+      refreshUserItems();
+    }
+  }, [isFocused]);
 
   const renderAvatarHeader = () => {
     return <Flex
@@ -61,15 +60,15 @@ console.log(userItems)
   }
 
   const renderItems = () => {
-    return <FlatList
-      ListHeaderComponent={
-        <Heading size="md">Newsfeed</Heading>
-      }
-      data={userItems}
-      renderItem={({ item }: any) => <ItemBox item={item} />}
-      numColumns={2}
-      keyExtractor={(item, index) => index.toString()}
-    />
+    return (
+      <FlatList
+        ListHeaderComponent={<Heading size="md">Newsfeed</Heading>}
+        data={roundArrayItems(userItems)}
+        renderItem={({ item }: any) => <ItemBox item={item} />}
+        numColumns={2}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    );
   }
 
   return (
@@ -82,7 +81,7 @@ console.log(userItems)
         </HStack>
 
         <Text fontSize="md">
-          {userAccount && userAccount.aboutMe}
+          {userData?.userAccount?.aboutMe}
         </Text>
         {userItems && <>
           <Divider my='4'/>

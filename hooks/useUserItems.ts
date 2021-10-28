@@ -1,20 +1,27 @@
 import * as React from 'react';
-import { getItemRef, getItemsCollectionRef } from '../libs/itemsFirestore';
-import useUserData from './useUserData';
+import { getItemsCollectionRef } from '../libs/itemsFirestore';
+import useUserUid from './useUserUid';
 
 export default function useUserItems() {
-  const userData = useUserData();
+  const userUid = useUserUid();
   const [userItems, setUserItems] = React.useState<any>([]);
 
   React.useEffect(() => {
-    (async () => {
-      if (userData && userData.items) {
-        const items: any = await getItemsCollectionRef().where('uid', 'in', userData.items).get();
+    refreshUserItems();
+  }, [userUid]);
 
-        setUserItems(items.data());
-      }
-    })()
-  }, [userData]);
+  const getUserItems = async () => {
+    const itemsSnapshot = await getItemsCollectionRef().where('user', '==', userUid).get();
+    return itemsSnapshot.docs.map(doc => doc.data());
+  };
 
-  return userItems;
+  const refreshUserItems = async () => {
+      const items = await getUserItems();
+      setUserItems(items);
+  };
+
+  return {
+    userItems,
+    refreshUserItems,
+  };
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useIsFocused } from '@react-navigation/native';
 import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
 import {
   Input,
@@ -12,6 +13,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import useAllItems from '../hooks/useAllItems';
 import ItemBox from '../components/ItemBox';
+import { roundArrayItems } from '../libs/utils';
 
 const SearchBar = () => (
   <Input
@@ -37,12 +39,19 @@ const SearchBar = () => (
 );
 
 export default function HomeScreen() {
+  const isFocused = useIsFocused();
   const { allItems, refreshItems } = useAllItems();
+
+  React.useEffect(() => {
+    if (isFocused) {
+      refreshItems();
+    }
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar />
-      <Box m='4' >
+      <Box m="4">
         <Heading size="md">Shop by category</Heading>
         <Text fontSize="sm">
           Your place to sell and find preloved clothes, shoes and accessories
@@ -50,16 +59,23 @@ export default function HomeScreen() {
       </Box>
       <FlatList
         ListHeaderComponent={
-          <Flex
-            direction="row" style={styles.boxContainer}>
-            <Heading size="md" p='4'>Newsfeed</Heading>
-            <Button variant="ghost" onPress={refreshItems} _text={{
-              fontSize: 'sm'
-            }}>Refresh feed</Button>
+          <Flex direction="row" style={styles.boxContainer}>
+            <Heading size="md" p="4">
+              Newsfeed
+            </Heading>
+            <Button
+              variant="ghost"
+              onPress={refreshItems}
+              _text={{
+                fontSize: "sm",
+              }}
+            >
+              Refresh feed
+            </Button>
           </Flex>
         }
-        data={allItems}
-        renderItem={({ item }: any) => <ItemBox item={item}/>}
+        data={roundArrayItems(allItems)}
+        renderItem={({ item }: any) => <ItemBox item={item} />}
         numColumns={2}
         keyExtractor={(item, index) => index.toString()}
       />

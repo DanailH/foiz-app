@@ -22,6 +22,18 @@ const FavouriteItemButton = ({ handleIsChecked, isChecked }: any) => (
 export default function ItemBox({ item }: any) {
   const [isChecked, setIsChecked] = React.useState(true);
 
+  if (!item) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "column",
+          margin: 10,
+        }}
+      />
+    );
+  }
+
   return (
     <View
       style={{

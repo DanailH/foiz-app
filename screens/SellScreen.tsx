@@ -35,7 +35,7 @@ export default function SellScreen({ navigation }: any) {
   const userUid = useUserUid();
   const [loading, setLoading] = React.useState(false);
   const itemUid = uuid();
-  const userData = useUserData();
+  const { userData } = useUserData();
   const [images, setImages] = React.useState<string[]>([]);
   const [itemTitle, setItemTitle] = React.useState<string>('');
   const [itemDescription, setItemDescription] = React.useState<string>('');
