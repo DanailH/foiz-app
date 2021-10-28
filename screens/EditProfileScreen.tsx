@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Platform, Image } from 'react-native';
+import { StyleSheet, Platform, } from 'react-native';
 import { StackActions } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import {
@@ -15,6 +15,7 @@ import {
   Divider,
   ScrollView,
   Flex,
+  Image
 } from 'native-base';
 import { MaterialIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import { uploadImage } from '../libs/utils';
@@ -24,7 +25,7 @@ import Loader from '../components/Loader';
 import useUserData from '../hooks/useUserData';
 import { storage } from '../libs/firebase';
 
-const StyledText = (props: any) => {
+export const StyledText = (props: any) => {
   const { children, ...other } = props;
 
   return (
@@ -71,7 +72,6 @@ const EditProfileScreen = ({ navigation }: any) => {
       aspect: [4, 3],
       quality: 1,
     });
-
     if (!result.cancelled) {
       setLoading(false);
       setAvatar(result.uri);
@@ -155,20 +155,22 @@ const EditProfileScreen = ({ navigation }: any) => {
             justifyContent="space-between"
           >
             <Flex flex="1">
-              <IconButton
-                variant="ghost"
-                onPress={handlePickImage}
-                _icon={{
-                  as: AntDesign,
-                  name: "edit",
-                }}
-              />
               <Image
+                alt="User avatar"
                 style={styles.avatar}
                 source={{
                   uri: avatar,
                 }}
               />
+                <IconButton
+                  variant="ghost"
+                  onPress={handlePickImage}
+                  style={styles.icon}
+                  _icon={{
+                    as: AntDesign,
+                    name: "edit",
+                  }}
+                />
             </Flex>
             <Flex direction="column" flex="2">
               <Text bold fontSize="lg">
@@ -250,7 +252,17 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: 100,
     height: 100,
+    marginLeft: 10,
   },
+  icon: {
+    backgroundColor: '#faf7f3',
+    color: 'black',
+    opacity: 0.9,
+    borderRadius: 50,
+    position: 'absolute',
+    right: 35,
+    bottom: 25
+  }
 });
 
 export default EditProfileScreen;

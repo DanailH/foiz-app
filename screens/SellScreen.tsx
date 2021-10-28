@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { StackActions } from '@react-navigation/native';
 import {
   Platform,
   StyleSheet,
@@ -30,7 +31,7 @@ import { Item } from '../models/itemModel';
 import firebase from '../libs/firebase';
 import Loader from '../components/Loader';
 
-export default function SellScreen() {
+export default function SellScreen({ navigation }: any) {
   const userUid = useUserUid();
   const [loading, setLoading] = React.useState(false);
   const itemUid = uuid();
@@ -98,7 +99,11 @@ export default function SellScreen() {
           items: [itemUid],
         });
       }
+      const popAction = StackActions.pop(1);
+      navigation.dispatch(popAction);
+
     } catch (e) {
+      setLoading(false);
       console.log(e);
       alert('Something went wrong. Please try again');
     } finally {
@@ -134,10 +139,10 @@ export default function SellScreen() {
               ListFooterComponent={
                 <React.Fragment>
                   <Box style={styles.selectBtn} paddingTop={!images.length ? '4' : '2'}>
-                    <Button onPress={handlePickImage} variant="outline" w="50%"
+                    <Button onPress={handlePickImage} variant="outline" w={!images.length ? "50%" : "15%"}
                       leftIcon={<Icon as={EvilIcons} name="plus" />}
                       >
-                      {!images.length ? 'Select images' : 'Change images'}
+                      {!images.length ? 'Select images' : ''}
                     </Button>
                   </Box>
                   <Box style={styles.box}>

@@ -23,6 +23,16 @@ export default function ProfileScreen() {
   const userItems = useUserItems();
   const userAccount = userData && userData.userAccount
   const { logOut } = React.useContext(AuthContext);
+console.log(userItems)
+  React.useEffect(() => {
+    const userAccount = userData?.userAccount;
+    // if (userAccount) {
+    //   setUserDescription(userAccount.aboutMe);
+    //   setGender(userAccount.gender);
+    //   setAvatar(userAccount.avatar);
+    // }
+    // setEmail(userData?.email);
+  }, [userData, userItems]);
 
   const renderAvatarHeader = () => {
     return <Flex
