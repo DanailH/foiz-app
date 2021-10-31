@@ -3,7 +3,7 @@ import { firestore } from '../libs/firebase';
 import { getItemsCollectionRef } from '../libs/itemsFirestore';
 
 export default function useUserData() {
-  const [allItems, setAllItems] = React.useState<any>(null);
+  const [allItems, setAllItems] = React.useState<any>([]);
 
   React.useEffect(() => {
     refreshItems();

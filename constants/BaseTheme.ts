@@ -64,8 +64,10 @@ export const theme = extendTheme({
     },
   },
   components: {
+    View: {
+      backgroundColor: '#fff'
+    },
     Button: {
-      // Can simply pass default props to change default behaviour of components.
       defaultProps: {
         borderRadius: 16,
         _text: {
@@ -78,7 +80,14 @@ export const theme = extendTheme({
     },
     Input: {
       borderColor: '#e6e6e6',
-      backgroundColor: '#e6e6e6'
+      backgroundColor: '#e6e6e6',
+    },
+    IconButton: {
+      defaultProps: {
+        _pressed: {
+          bg: "#fff",
+        }
+      }
     }
   },
 });

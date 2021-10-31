@@ -6,7 +6,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, EvilIcons } from '@expo/vector-icons';
+import { IconButton } from 'native-base';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import HomeScreen from '../screens/HomeScreen';
@@ -35,6 +36,7 @@ export default function BottomTabNavigator() {
         component={SellNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-add-circle" color={color} />,
+          tabBarVisible: false
         }}
       />
       <BottomTab.Screen
@@ -72,13 +74,27 @@ function HomeNavigator() {
 
 const SellStack = createStackNavigator<SellParamList>();
 
-function SellNavigator() {
+function SellNavigator({ navigation }: any) {
   return (
     <SellStack.Navigator>
       <SellStack.Screen
         name="SellScreen"
         component={SellScreen}
-        options={{ headerTitle: 'Sell item' }}
+        options={{
+          headerTitle: 'Sell item',
+          headerLeft: () => (
+            <IconButton
+              onPress={() => {
+                navigation.goBack()
+              }}
+              title="Close"
+              _icon={{
+                as: EvilIcons,
+                name: "close",
+              }}
+            />
+          ),
+        }}
       />
     </SellStack.Navigator>
   );

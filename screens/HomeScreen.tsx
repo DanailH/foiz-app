@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useIsFocused } from '@react-navigation/native';
-import { FlatList, SafeAreaView, StyleSheet } from 'react-native';
+import { FlatList, View, StyleSheet } from 'react-native';
 import {
   Input,
   Heading,
@@ -8,7 +8,8 @@ import {
   Box,
   Flex,
   Icon,
-  Button
+  Button,
+  ScrollView
 } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 import useAllItems from '../hooks/useAllItems';
@@ -49,8 +50,9 @@ export default function HomeScreen() {
   }, [isFocused]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container} >
       <SearchBar />
+      <ScrollView>
       <Box m="4">
         <Heading size="md">Shop by category</Heading>
         <Text fontSize="sm">
@@ -75,11 +77,12 @@ export default function HomeScreen() {
           </Flex>
         }
         data={roundArrayItems(allItems)}
-        renderItem={({ item }: any) => <ItemBox item={item} />}
+        renderItem={({ item, index }: any) => <ItemBox index={index} item={item} />}
         numColumns={2}
         keyExtractor={(item, index) => index.toString()}
       />
-    </SafeAreaView>
+    </ScrollView>
+    </View>
   );
 }
 
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
-    padding: 20
+    padding: 10,
   },
   title: {
     fontSize: 20,
@@ -95,6 +98,7 @@ const styles = StyleSheet.create({
   },
   boxContainer: {
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    // padding: 20
   },
 });

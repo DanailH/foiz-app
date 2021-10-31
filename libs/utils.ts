@@ -29,5 +29,5 @@ export const uploadImage = async (uri: string) => {
 };
 
 export const roundArrayItems = (array: any) => {
-  return array.lenght % 2 === 0 ? array : [...array, null];
+  return array.length % 2 === 0 ? array : [...array, {}];
 }

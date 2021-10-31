@@ -86,7 +86,7 @@ const EditProfileScreen = ({ navigation }: any) => {
         uploadedAvatarUrl = await uploadImage(avatar);
       }
 
-      if (userData.userAccount) {
+      if (userData?.userAccount) {
         await getUserRef(userUid).update({
           ...userData,
           userAccount: {
@@ -109,7 +109,7 @@ const EditProfileScreen = ({ navigation }: any) => {
         });
       }
 
-      if (userData.userAccount.avatar) {
+      if (userData.userAccount?.avatar) {
         let oldAvatarRef = storage.refFromURL(userData.userAccount.avatar);
         await oldAvatarRef.delete();
       }
@@ -158,11 +158,13 @@ const EditProfileScreen = ({ navigation }: any) => {
             direction="row"
             alignItems="center"
             justifyContent="space-between"
+            px={4}
           >
-            <Flex flex="1">
+            <Flex 
+            flex="1" 
+            style={styles.avatar}
+            >
               <Image
-                alt="User avatar"
-                style={styles.avatar}
                 source={{
                   uri: avatar,
                 }}
@@ -257,7 +259,8 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: 100,
     height: 100,
-    marginLeft: 10,
+    marginRight: 10,
+    backgroundColor: '#faf7f3',
   },
   icon: {
     backgroundColor: '#faf7f3',
@@ -265,7 +268,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     borderRadius: 50,
     position: 'absolute',
-    right: 35,
+    right: 28,
     bottom: 25
   }
 });

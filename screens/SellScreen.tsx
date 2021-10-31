@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StackActions } from '@react-navigation/native';
+import { StackActions, useFocusEffect } from '@react-navigation/native';
 import {
   Platform,
   StyleSheet,
@@ -21,12 +21,12 @@ import {
   ScrollView
 } from 'native-base';
 import { EvilIcons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 import { uploadImage } from '../libs/utils';
 import useUserUid from '../hooks/useUserUid';
 import { getItemRef } from '../libs/itemsFirestore';
 import useUserData from '../hooks/useUserData';
 import { getUserRef } from '../libs/usersFirestore';
-import { Picker } from '@react-native-picker/picker';
 import { Item } from '../models/itemModel';
 import firebase from '../libs/firebase';
 import Loader from '../components/Loader';
@@ -42,6 +42,19 @@ export default function SellScreen({ navigation }: any) {
   const [itemBrand, setItemBrand] = React.useState<string>('');
   const [itemPrice, setItemPrice] = React.useState<string>('');
   const [itemCondition, setItemCondition] = React.useState<string>('');
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setImages([]);
+        setItemTitle('');
+        setItemDescription('');
+        setItemBrand('');
+        setItemPrice('');
+        setItemCondition('');
+      };
+    }, [])
+  );
 
   React.useEffect(() => {
     (async () => {
@@ -222,7 +235,7 @@ const styles = StyleSheet.create({
   },
   box: {
     marginBottom: 20,
-    padding: 20,
+    padding: 10,
     backgroundColor: "#FFF",
   },
 });

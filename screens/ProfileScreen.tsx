@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, ScrollView } from 'react-native';
 import {
   Avatar,
   Text,
-  Button,
   HStack,
   Flex,
   Stack,
@@ -11,26 +10,24 @@ import {
   Divider
 } from 'native-base';
 import { Feather } from '@expo/vector-icons';
-import { View } from '../components/Themed';
-import { Context as AuthContext } from '../contexts/AuthContext';
+import { useIsFocused } from '@react-navigation/native';
 import useUserData from '../hooks/useUserData';
 import useUserItems from '../hooks/useUserItems';
 import ProfileSheet from '../components/ProfileSheet';
 import ItemBox from '../components/ItemBox';
-import { useIsFocused } from '@react-navigation/native';
 import { roundArrayItems } from '../libs/utils';
 
 export default function ProfileScreen() {
   const isFocused = useIsFocused();
   const { userData, refreshUserData } = useUserData();
   const { userItems, refreshUserItems } = useUserItems();
-  const { logOut } = React.useContext(AuthContext);
 
   React.useEffect(() => {
     if (isFocused) {
       refreshUserData();
       refreshUserItems();
     }
+    
   }, [isFocused]);
 
   const renderAvatarHeader = () => {
@@ -38,15 +35,16 @@ export default function ProfileScreen() {
       direction="row"
       alignItems='center'
       justifyContent='space-between'
+      paddingBottom='4'
     >
 
       <Flex flex='1'>
         <Avatar
           alignSelf="center"
           size="xl"
-        // source={{
-        //   uri: avatar,
-        // }}
+          source={{
+            uri: userData?.userAccount?.avatar,
+          }}
         >
         </Avatar>
       </Flex>
@@ -59,22 +57,24 @@ export default function ProfileScreen() {
     </Flex>
   }
 
+  const itemsCount = userData?.items?.length
+  
   const renderItems = () => {
     return (
       <FlatList
-        ListHeaderComponent={<Heading size="md">Newsfeed</Heading>}
+        ListHeaderComponent={<Heading size="sm" paddingBottom="4">{itemsCount} items</Heading>}
         data={roundArrayItems(userItems)}
-        renderItem={({ item }: any) => <ItemBox item={item} />}
+        renderItem={({ item, index }: any) => <ItemBox index={index} item={item} />}
         numColumns={2}
         keyExtractor={(item, index) => index.toString()}
       />
     );
   }
-
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {renderAvatarHeader()}
-      <Stack space={2} my='4'>
+      <Stack space={2} >
+        <Divider my='2' />
         <HStack>
           <Feather name="map-pin" size={20} style={styles.icon} />
           <Text marginLeft='2' fontSize="md">Burgas, Bulgaria</Text>
@@ -83,29 +83,22 @@ export default function ProfileScreen() {
         <Text fontSize="md">
           {userData?.userAccount?.aboutMe}
         </Text>
-        {userItems && <>
-          <Divider my='4'/>
-          {renderItems()}
-        </>
-        }
       </Stack>
-      <Button
-        onPress={() => logOut()}
-        accessibilityLabel="Log out"
-        variant="ghost"
-      >
-        Log out
-      </Button>
-
+      {userItems && <>
+        <Divider my='4' />
+        {renderItems()}
+      </>
+      }
       <ProfileSheet />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20
+    padding: 10,
+    backgroundColor: "#FFF",
   },
   title: {
     fontSize: 20,
