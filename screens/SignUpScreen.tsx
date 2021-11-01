@@ -9,17 +9,19 @@ import {
   Stack,
   Icon,
 } from 'native-base';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { Context as AuthContext } from '../contexts/AuthContext';
 import Loader from '../components/Loader';
 
 const SignUpScreen = () => {
+  // const [username, setUserName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const { signUp } = React.useContext(AuthContext);
 
   const handleEmailOnChange = (value: string) => setEmail(value);
+  // const handleUserNameOnChange = (value: string) => setUserName(value);
   const handlePasswordOnChange = (value: string) => setPassword(value);
   const handleSignUpOnPress = () => {
     setLoading(true), signUp({ email, password })
@@ -37,11 +39,30 @@ const SignUpScreen = () => {
             our app.
           </Text>
           <Divider my="4" />
+
+          {/* //TODO: Username to be fixed */}
+          {/* <Input
+            placeholder="Username"
+            isRequired
+            size="lg"
+            variant="underlined"
+            onChangeText={handleUserNameOnChange}
+            value={username}
+            InputLeftElement={
+              <Icon
+                as={<FontAwesome name="user" />}
+                size={5}
+                ml="2"
+                color="muted.400"
+              />
+            }
+          /> */}
+
           <Input
-            style={styles.input}
             placeholder="Email"
             isRequired
             size="lg"
+            variant="underlined"
             onChangeText={handleEmailOnChange}
             value={email}
             InputLeftElement={
@@ -55,9 +76,9 @@ const SignUpScreen = () => {
           />
 
           <Input
-            style={styles.input}
             placeholder="Password"
             size="lg"
+            variant="underlined"
             onChangeText={handlePasswordOnChange}
             value={password}
             isRequired
@@ -80,7 +101,7 @@ const SignUpScreen = () => {
             }
           />
 
-          <Button onPress={handleSignUpOnPress} accessibilityLabel="Sign Up">
+          <Button onPress={handleSignUpOnPress} accessibilityLabel="Sign Up" marginTop='6'>
             Sign Up
           </Button>
           <Text fontSize="xs">
@@ -99,13 +120,10 @@ SignUpScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-    backgroundColor: '#faf7f3',
+    backgroundColor: '#fff',
   },
   box: {
-    padding: 20,
-  },
-  input: {
-    backgroundColor: '#FFF',
+    padding: 10,
   },
 });
 

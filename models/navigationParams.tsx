@@ -25,4 +25,5 @@ export type SellParamList = {
 
 export type ProfileParamList = {
   ProfileScreen: undefined;
+  EditProfileScreen: undefined;
 };

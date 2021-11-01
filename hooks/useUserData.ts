@@ -7,14 +7,21 @@ export default function useUserData() {
   const [userData, setUserData] = React.useState<any>(null);
 
   React.useEffect(() => {
-    (async () => {
-      const user = await getUserRef(userUid).get();
-
-      if (user.data()) {
-        setUserData(user.data());
-      }
-    })();
+    refreshUserData();
   }, [userUid]);
 
-  return userData;
+  const getUserData = async () => {
+    const user = await getUserRef(userUid).get();
+    return user.data();
+  };
+
+  const refreshUserData = async () => {
+    const data = await getUserData();
+    setUserData(data);
+  };
+
+  return {
+    userData,
+    refreshUserData
+  };
 }

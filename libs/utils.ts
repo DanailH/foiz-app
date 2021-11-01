@@ -27,3 +27,7 @@ export const uploadImage = async (uri: string) => {
 
   return await snapshot.ref.getDownloadURL();
 };
+
+export const roundArrayItems = (array: any) => {
+  return array.length % 2 === 0 ? array : [...array, {}];
+}

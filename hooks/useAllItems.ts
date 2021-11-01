@@ -3,7 +3,11 @@ import { firestore } from '../libs/firebase';
 import { getItemsCollectionRef } from '../libs/itemsFirestore';
 
 export default function useUserData() {
-  const [allItems, setAllItems] = React.useState<any>(null);
+  const [allItems, setAllItems] = React.useState<any>([]);
+
+  React.useEffect(() => {
+    refreshItems();
+  }, [firestore]);
 
   const getAllItems = async () => {
     const itemsSnapshot = await getItemsCollectionRef().orderBy('timestamp', 'desc').get();
@@ -14,10 +18,6 @@ export default function useUserData() {
     const items = await getAllItems();
     setAllItems(items);
   };
-
-  React.useEffect(() => {
-    refreshItems();
-  }, [firestore]);
 
   return {
     allItems,

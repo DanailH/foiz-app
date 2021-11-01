@@ -3,17 +3,17 @@
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
 
-import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-
+import { Ionicons, EvilIcons } from '@expo/vector-icons';
+import { IconButton } from 'native-base';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import HomeScreen from '../screens/HomeScreen';
 import SellScreen from '../screens/SellScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import { BottomTabParamList, HomeParamList, SellParamList, ProfileParamList } from '../models/navigationParams';
+import { BottomTabParamList, HomeParamList, SellParamList } from '../models/navigationParams';
+import { ProfileNavigator } from './ProfileNavigator';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -36,6 +36,7 @@ export default function BottomTabNavigator() {
         component={SellNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-add-circle" color={color} />,
+          tabBarVisible: false
         }}
       />
       <BottomTab.Screen
@@ -73,28 +74,28 @@ function HomeNavigator() {
 
 const SellStack = createStackNavigator<SellParamList>();
 
-function SellNavigator() {
+function SellNavigator({ navigation }: any) {
   return (
     <SellStack.Navigator>
       <SellStack.Screen
         name="SellScreen"
         component={SellScreen}
-        options={{ headerTitle: 'Sell' }}
+        options={{
+          headerTitle: 'Sell item',
+          headerLeft: () => (
+            <IconButton
+              onPress={() => {
+                navigation.goBack()
+              }}
+              title="Close"
+              _icon={{
+                as: EvilIcons,
+                name: "close",
+              }}
+            />
+          ),
+        }}
       />
     </SellStack.Navigator>
-  );
-}
-
-const ProfileStack = createStackNavigator<ProfileParamList>();
-
-function ProfileNavigator() {
-  return (
-    <ProfileStack.Navigator>
-      <ProfileStack.Screen
-        name="ProfileScreen"
-        component={ProfileScreen}
-        options={{ headerTitle: 'Profile' }}
-      />
-    </ProfileStack.Navigator>
   );
 }

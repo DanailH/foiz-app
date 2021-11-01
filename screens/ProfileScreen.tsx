@@ -1,82 +1,110 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, ScrollView } from 'react-native';
 import {
   Avatar,
   Text,
-  Button,
-  Input,
-  Icon,
-  Box
+  HStack,
+  Flex,
+  Stack,
+  Heading,
+  Divider
 } from 'native-base';
-import { MaterialIcons } from '@expo/vector-icons';
-import { View } from '../components/Themed';
-import { Context as AuthContext } from '../contexts/AuthContext';
+import { Feather } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
 import useUserData from '../hooks/useUserData';
+import useUserItems from '../hooks/useUserItems';
+import ProfileSheet from '../components/ProfileSheet';
+import ItemBox from '../components/ItemBox';
+import { roundArrayItems } from '../libs/utils';
 
 export default function ProfileScreen() {
-  const userData = useUserData();
+  const isFocused = useIsFocused();
+  const { userData, refreshUserData } = useUserData();
+  const { userItems, refreshUserItems } = useUserItems();
 
-  console.log(userData, 'user')
-  const { logOut } = React.useContext(AuthContext);
+  React.useEffect(() => {
+    if (isFocused) {
+      refreshUserData();
+      refreshUserItems();
+    }
+    
+  }, [isFocused]);
 
+  const renderAvatarHeader = () => {
+    return <Flex
+      direction="row"
+      alignItems='center'
+      justifyContent='space-between'
+      paddingBottom='4'
+    >
+
+      <Flex flex='1'>
+        <Avatar
+          alignSelf="center"
+          size="xl"
+          source={{
+            uri: userData?.userAccount?.avatar,
+          }}
+        >
+        </Avatar>
+      </Flex>
+      <Flex
+        direction="column" flex='2' alignItems='center'>
+        <Text bold fontSize='lg'>
+          {userData && userData.name}
+        </Text>
+      </Flex>
+    </Flex>
+  }
+
+  const itemsCount = userData?.items?.length
+  
+  const renderItems = () => {
+    return (
+      <FlatList
+        ListHeaderComponent={<Heading size="sm" paddingBottom="4">{itemsCount} items</Heading>}
+        data={roundArrayItems(userItems)}
+        renderItem={({ item, index }: any) => <ItemBox index={index} item={item} />}
+        numColumns={2}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    );
+  }
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
-      <Avatar
-        alignSelf="center"
-        size="xl">
-      </Avatar>
-      <Text fontSize="md" textAlign='center' py='4'>
-        Username
-      </Text>
-      <Box style={styles.boxContainer} p='4'>
-      <Input
-        placeholder="Email"
-        size="lg"
-        InputLeftElement={
-          <Icon
-            as={<MaterialIcons name="email" />}
-            size={5}
-            ml="2"
-            color="muted.400"
-          />
-        }
-      />
-      <Input
-        placeholder="Country"
-        size="lg"
-        marginTop ='4'
-        InputLeftElement={
-          <Icon
-            as={<MaterialIcons name="email" />}
-            size={5}
-            ml="2"
-            color="muted.400"
-          />
-        }
-      />
-      </Box>
-      <Button
-        onPress={() => logOut()}
-        accessibilityLabel="Log out" 
-        variant="ghost"
-      >
-        Log out
-      </Button>
-    </View>
+    <ScrollView style={styles.container}>
+      {renderAvatarHeader()}
+      <Stack space={2} >
+        <Divider my='2' />
+        <HStack>
+          <Feather name="map-pin" size={20} style={styles.icon} />
+          <Text marginLeft='2' fontSize="md">Burgas, Bulgaria</Text>
+        </HStack>
+
+        <Text fontSize="md">
+          {userData?.userAccount?.aboutMe}
+        </Text>
+      </Stack>
+      {userItems && <>
+        <Divider my='4' />
+        {renderItems()}
+      </>
+      }
+      <ProfileSheet />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#faf7f3',
+    padding: 10,
+    backgroundColor: "#FFF",
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
   },
-  boxContainer: {
-    backgroundColor: '#fff',
+  icon: {
+    color: '#737373'
   }
 });

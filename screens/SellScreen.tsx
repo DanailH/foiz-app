@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { StackActions, useFocusEffect } from '@react-navigation/native';
 import {
   Platform,
   StyleSheet,
@@ -20,28 +21,41 @@ import {
   ScrollView
 } from 'native-base';
 import { EvilIcons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 import { uploadImage } from '../libs/utils';
 import useUserUid from '../hooks/useUserUid';
 import { getItemRef } from '../libs/itemsFirestore';
 import useUserData from '../hooks/useUserData';
 import { getUserRef } from '../libs/usersFirestore';
-import { Picker } from '@react-native-picker/picker';
 import { Item } from '../models/itemModel';
 import firebase from '../libs/firebase';
 import Loader from '../components/Loader';
 
-export default function SellScreen() {
+export default function SellScreen({ navigation }: any) {
   const userUid = useUserUid();
   const [loading, setLoading] = React.useState(false);
   const itemUid = uuid();
-  const userData = useUserData();
+  const { userData } = useUserData();
   const [images, setImages] = React.useState<string[]>([]);
   const [itemTitle, setItemTitle] = React.useState<string>('');
   const [itemDescription, setItemDescription] = React.useState<string>('');
   const [itemBrand, setItemBrand] = React.useState<string>('');
   const [itemPrice, setItemPrice] = React.useState<string>('');
   const [itemCondition, setItemCondition] = React.useState<string>('');
-  
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        setImages([]);
+        setItemTitle('');
+        setItemDescription('');
+        setItemBrand('');
+        setItemPrice('');
+        setItemCondition('');
+      };
+    }, [])
+  );
+
   React.useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -86,11 +100,23 @@ export default function SellScreen() {
       };
 
       getItemRef(itemUid).set(item);
-      getUserRef(userUid).update({
-        ...userData,
-        items: [...userData.items, itemUid],
-      });
+
+      if (userData && userData.items) {
+        getUserRef(userUid).update({
+          ...userData,
+          items: [...userData.items, itemUid],
+        });
+      } else {
+        getUserRef(userUid).set({
+          ...userData,
+          items: [itemUid],
+        });
+      }
+      const popAction = StackActions.pop(1);
+      navigation.dispatch(popAction);
+
     } catch (e) {
+      setLoading(false);
       console.log(e);
       alert('Something went wrong. Please try again');
     } finally {
@@ -106,7 +132,7 @@ export default function SellScreen() {
 
   return (
     <React.Fragment>
-      <Loader isLoading={loading} />    
+      <Loader isLoading={loading} />
       <SafeAreaView style={styles.container}>
         <ScrollView>
           <Stack space={4}>
@@ -116,21 +142,20 @@ export default function SellScreen() {
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }: any) => (
                 <Box p={2}>
-
                   <Image
                     source={{ uri: item }}
                     size='md'
                     alt='item-image'
-                    />
+                  />
                 </Box>
               )}
               ListFooterComponent={
                 <React.Fragment>
                   <Box style={styles.selectBtn} paddingTop={!images.length ? '4' : '2'}>
-                    <Button onPress={handlePickImage} variant="outline" w="50%"
+                    <Button onPress={handlePickImage} variant="outline" w={!images.length ? "50%" : "15%"}
                       leftIcon={<Icon as={EvilIcons} name="plus" />}
                       >
-                      {!images.length ? 'Select images' : 'Change images'}
+                      {!images.length ? 'Select images' : ''}
                     </Button>
                   </Box>
                   <Box style={styles.box}>
@@ -197,20 +222,20 @@ export default function SellScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#faf7f3',
+    backgroundColor: "#faf7f3",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   selectBtn: {
-    alignItems: 'center',
-    display: 'flex',
+    alignItems: "center",
+    display: "flex",
     marginBottom: 20,
   },
   box: {
     marginBottom: 20,
-    padding: 20,
-    backgroundColor: '#FFF',
+    padding: 10,
+    backgroundColor: "#FFF",
   },
 });
