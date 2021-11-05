@@ -6,23 +6,30 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { Ionicons, EvilIcons } from '@expo/vector-icons';
-import { IconButton } from 'native-base';
-import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
+import { Ionicons, EvilIcons, Entypo } from '@expo/vector-icons';
+import { Icon, IconButton, useDisclose } from 'native-base';
 import HomeScreen from '../screens/HomeScreen';
 import SellScreen from '../screens/SellScreen';
+import ItemDetailsScreen from '../screens/ItemDetailsScreen';
 import { BottomTabParamList, HomeParamList, SellParamList } from '../models/navigationParams';
 import { ProfileNavigator } from './ProfileNavigator';
+import { theme } from '../constants/BaseTheme';
+import ProfileScreenContext from '../contexts/ProfileScreenContext';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-
   return (
     <BottomTab.Navigator
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+    animationEnabled
+      tabBarOptions={{ activeTintColor: theme.colors.primary[400],
+        labelStyle: {
+          fontSize: 12,
+        },
+        iconStyle: {
+          size: 20
+        }
+      }}
     >
       <BottomTab.Screen
         name="Home"
@@ -60,15 +67,58 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const HomeStack = createStackNavigator<HomeParamList>();
 
-function HomeNavigator() {
+const ProfileSheetHeaderRight = () => {
+  const { onOpen } = React.useContext(ProfileScreenContext)
+
   return (
+    <IconButton
+      onPress={onOpen}
+      _pressed={{
+        bg: "#fff",
+      }}
+      icon={<Icon as={<Entypo name='dots-three-horizontal' />}
+        size='sm'
+      />} />
+  )
+};
+
+function HomeNavigator({ navigation }: any) {
+  const { isOpen, onOpen, onClose } = useDisclose();
+  
+  return (
+    <ProfileScreenContext.Provider value={{ isOpen, onOpen, onClose }}>
     <HomeStack.Navigator>
       <HomeStack.Screen
         name="HomeScreen"
         component={HomeScreen}
         options={{ headerTitle: 'Home' }}
       />
-    </HomeStack.Navigator>
+
+      <HomeStack.Screen
+        name="ItemDetailsScreen"
+        component={ItemDetailsScreen}
+        options={{
+          headerTitle: "Item details",
+          headerRight: ProfileSheetHeaderRight,
+          headerLeft: () => (
+            <IconButton
+              onPress={() => {
+                navigation.goBack()
+              }}
+              title="Back"
+              _pressed={{
+                bg: "transparent",
+              }}
+              _icon={{
+                as: Entypo,
+                name: "chevron-small-left",
+              }}
+            />
+          ),
+        }}
+      />
+      </HomeStack.Navigator>
+    </ProfileScreenContext.Provider>
   );
 }
 

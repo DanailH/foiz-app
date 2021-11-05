@@ -29,6 +29,11 @@ export default {
               EditProfileScreen: 'EditProfile',
             },
           },
+          ItemDetails: {
+            screens: {
+              ItemDetailScreen: 'Item Details',
+            },
+          },
         },
       },
       Auth: {
