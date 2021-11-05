@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import useAllItems from '../hooks/useAllItems';
 import ItemBox from '../components/ItemBox';
 import { roundArrayItems } from '../libs/utils';
+import Loader from '../components/Loader';
 
 const SearchBar = () => (
   <Input
@@ -41,8 +42,8 @@ const SearchBar = () => (
 
 export default function HomeScreen() {
   const isFocused = useIsFocused();
-  const { allItems, refreshItems } = useAllItems();
-
+  const { loading, allItems, refreshItems } = useAllItems();
+  
   React.useEffect(() => {
     if (isFocused) {
       refreshItems();
@@ -51,6 +52,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container} >
+      <Loader isLoading={loading} />
       <SearchBar />
       <ScrollView>
       <Box m="4">

@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet, Image, View } from "react-native";
+import { StyleSheet, Image, View, TouchableOpacity } from "react-native";
 import { Text, IconButton, Flex } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
+import { navigate } from '../navigation/navigationRef';
 
 const FavouriteItemButton = ({ handleIsChecked, isChecked }: any) => (
   <IconButton
@@ -21,8 +22,9 @@ const FavouriteItemButton = ({ handleIsChecked, isChecked }: any) => (
 
 export default function ItemBox({ item, index }: any) {
   const [isChecked, setIsChecked] = React.useState(true);
+  const handleItemDetailsOnPress = () => navigate('ItemDetailsScreen', { itemId: item.id });
   const isItemEven = (index + 1) % 2 == 0
-
+  
   if (!item.price) {
     return (
       <View
@@ -31,8 +33,9 @@ export default function ItemBox({ item, index }: any) {
     );
   }
   return (
-    <View
+    <TouchableOpacity
       style={isItemEven ? styles.imageWrapper : styles.evenImageWrapper}
+      onPress={handleItemDetailsOnPress}
     >
       <Image style={styles.imageThumbnail} source={{ uri: item.images[0] }} />
       <Flex direction="row" style={styles.boxContainer}>
@@ -46,7 +49,7 @@ export default function ItemBox({ item, index }: any) {
       </Flex>
       <Text>{item.brand} M</Text>
       <Text></Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

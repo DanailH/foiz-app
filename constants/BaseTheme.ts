@@ -75,6 +75,11 @@ export const theme = extendTheme({
         }
       },
     },
+    Text: {
+      defaultProps: {
+        fontSize: 'sm',
+      },
+    },
     Heading: {
       backgroundColor: 'black'
     },

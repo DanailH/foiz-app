@@ -6,6 +6,7 @@ import EditProfileScreen from '../screens/EditProfileScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { ProfileParamList } from '../models/navigationParams';
 import ProfileScreenContext from '../contexts/ProfileScreenContext';
+import { navigate } from '../navigation/navigationRef';
 
 const ProfileStack = createStackNavigator<ProfileParamList>();
 
@@ -41,7 +42,22 @@ export function ProfileNavigator() {
         <ProfileStack.Screen
           name="EditProfileScreen"
           component={EditProfileScreen}
-          options={{ headerTitle: "Edit profile" }}
+          options={{ headerTitle: "Edit profile",
+            headerLeft: () => (
+              <IconButton
+                onPress={() => {
+                  navigate('ProfileScreen')
+                }}
+                title="Back"
+                _pressed={{
+                  bg: "transparent",
+                }}
+                _icon={{
+                  as: Entypo,
+                  name: "chevron-small-left",
+                }}
+              />
+            ), }}
         />
       </ProfileStack.Navigator>
     </ProfileScreenContext.Provider>

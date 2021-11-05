@@ -112,6 +112,8 @@ export default function SellScreen({ navigation }: any) {
           items: [itemUid],
         });
       }
+
+      //TODO: Redirect back needs to be fixedxs
       const popAction = StackActions.pop(1);
       navigation.dispatch(popAction);
 

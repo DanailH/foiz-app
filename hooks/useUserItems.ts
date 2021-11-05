@@ -12,7 +12,7 @@ export default function useUserItems() {
 
   const getUserItems = async () => {
     const itemsSnapshot = await getItemsCollectionRef().where('user', '==', userUid).get();
-    return itemsSnapshot.docs.map(doc => doc.data());
+    return itemsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
   };
 
   const refreshUserItems = async () => {
